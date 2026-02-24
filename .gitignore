@@ -1,6 +1,12 @@
 # Database files used for testing
 *.db
 
+# Local testing build
+sqlite-cpp
+
+#My notes
+notes.txt
+
 ##### Windows
 # Windows thumbnail cache files
 Thumbs.db
