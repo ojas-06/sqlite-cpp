@@ -1,6 +1,5 @@
-#include <cstring>
-#include <iostream>
-#include <fstream>
+#include "Database.hpp"
+#include "PageParser.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -18,28 +17,15 @@ int main(int argc, char *argv[])
     std::string database_file_path = argv[1];
     std::string command = argv[2];
 
+    Database Db(database_file_path);
+
     if (command == ".dbinfo")
     {
-        std::ifstream database_file(database_file_path, std::ios::binary);
-        if (!database_file)
-        {
-            std::cerr << "Failed to open the database file" << std::endl;
-            return 1;
-        }
-
-        database_file.seekg(16);
-
-        char buffer[2];
-        database_file.read(buffer, 2);
-
-        unsigned short page_size = (static_cast<unsigned char>(buffer[1]) | (static_cast<unsigned char>(buffer[0]) << 8));
-
-        database_file.seekg(103);
-        database_file.read(buffer, 2);
-        unsigned short tables = (static_cast<unsigned char>(buffer[1]) | (static_cast<unsigned char>(buffer[0]) << 8));
-
-        std::cout << "database page size: " << page_size << std::endl;
-        std::cout << "number of tables: " << tables << std::endl;
+        Db.getDbInfo();
+    }
+    else if(command == ".tables"){
+        PageParser schemaParser(Db,1);
+        
     }
 
     return 0;
