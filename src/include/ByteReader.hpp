@@ -5,7 +5,7 @@
 #include <fstream>
 #include <utility>
 
-class Database;  // Forward declaration
+class Database;
 
 class ByteReader
 {
