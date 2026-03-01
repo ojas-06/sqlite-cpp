@@ -1,5 +1,5 @@
 #pragma once
-#include "ByteReader.hpp"
+#include "./ByteReader.hpp"
 
 class Database
 {

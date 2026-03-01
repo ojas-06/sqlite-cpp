@@ -1,6 +1,6 @@
 #pragma once
-#include "Database.hpp"
-#include "ByteReader.hpp"
+#include "./Database.hpp"
+#include "./ByteReader.hpp"
 #include <vector>
 
 class PageParser

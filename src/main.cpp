@@ -1,5 +1,5 @@
-#include "Database.hpp"
-#include "PageParser.hpp"
+#include "./include/Database.hpp"
+#include "./include/PageParser.hpp"
 
 int main(int argc, char *argv[])
 {

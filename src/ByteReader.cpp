@@ -1,5 +1,5 @@
-#include "ByteReader.hpp"
-#include "Database.hpp"
+#include "./include/ByteReader.hpp"
+#include "./include/Database.hpp"
 
 void ByteReader::read_at(std::ifstream &database_file, char *buffer, unsigned int size, unsigned int offset, unsigned int pre_off)
 {
