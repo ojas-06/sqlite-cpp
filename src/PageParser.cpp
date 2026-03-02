@@ -58,11 +58,8 @@ void PageParser::printUserTableNames() // schema table cell is a table btree lea
     {
       std::tie(stc, off) = Br.read_varint(db, curr_offset);
       serialTypeCodes.push_back(stc);
-      // std::cout << stc << std::endl;
       curr_offset += off;
     }
-    // for (auto x : serialTypeCodes)
-    //   std::cout << x << std::endl;
 
     // skipping first two columns
     // columns in schema are : (type, name, tbl_name, rootpage, sql)
@@ -80,11 +77,9 @@ void PageParser::printUserTableNames() // schema table cell is a table btree lea
       if ((serialTypeCodes[i] % 2) && (serialTypeCodes[i] >= 13))
         curr_offset += (serialTypeCodes[i] - 13) / 2;
     }
-    // std::cout << serialTypeCodes[2] << std::endl;
     if ((serialTypeCodes[2] % 2) && (serialTypeCodes[2] >= 13))
     {
       // tbl_name == string
-      // std::cout << "string\n";
       unsigned int stringSize = (serialTypeCodes[2] - 13) / 2;
       char *buffer;
       buffer = (char *)malloc(stringSize);
