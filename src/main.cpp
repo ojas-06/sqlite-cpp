@@ -23,9 +23,10 @@ int main(int argc, char *argv[])
     {
         Db.getDbInfo();
     }
-    else if(command == ".tables"){
-        PageParser schemaParser(Db,1);
-        
+    else if (command == ".tables")
+    {
+        PageParser schemaParser(Db, 1);
+        schemaParser.printUserTableNames();
     }
 
     return 0;

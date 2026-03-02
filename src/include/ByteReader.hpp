@@ -18,4 +18,6 @@ public:
   uint16_t byteToU16(char *buffer);
 
   std::pair<uint64_t, int> read_varint(Database &db, uint64_t offset);
+
+  int bytesForVarint(uint64_t v);
 };

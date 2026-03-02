@@ -33,3 +33,12 @@ std::pair<uint64_t, int> ByteReader::read_varint(Database &db, uint64_t off)
   v = (v << 8) | (uint64_t)b9;
   return {v, 9};
 }
+
+int ByteReader::bytesForVarint(uint64_t v){
+  if(v & (0xFF<<56)) return 8;
+  int c = 7;
+  for(int i=48; i>=0; i-=7,c--){
+    if(v & (0xFE<<i)) return c;
+  }
+  return 1;
+}

@@ -36,22 +36,64 @@ PageParser::PageParser(Database &db, unsigned int page_no) : page_no(page_no), d
   }
 }
 
-void PageParser::printUserTableNames()
+void PageParser::printUserTableNames() // schema table cell is a table btree leaf cell
 {
-  for (auto cell_offset : cellPointers)
+  for (auto cell_offset : cellPointers) // reading one cell
   {
-    int curr_offset = cell_offset + page_offset;
-    std::pair<uint64_t, int> recordSize = Br.read_varint(db, curr_offset);
-    curr_offset += recordSize.second;
-    std::pair<uint64_t, int> rowid = Br.read_varint(db, curr_offset);
-    curr_offset += rowid.second;
+    int curr_offset = cell_offset + page_offset, off;
+    uint64_t recordSize, rowid;
+    std::tie(recordSize, off) = Br.read_varint(db, curr_offset);
+    curr_offset += off;
+    std::tie(rowid, off) = Br.read_varint(db, curr_offset);
+    curr_offset += off;
 
-    char *payload;
-    payload = (char *)malloc(recordSize.first);
-    Br.read_at(db.getDBFile(), payload, recordSize.first, curr_offset);
+    uint64_t recordHeaderSize;
+    std::tie(recordHeaderSize, off) = Br.read_varint(db, curr_offset);
+    int bytesForHeaderSize = Br.bytesForVarint(recordHeaderSize);
+    curr_offset += bytesForHeaderSize;
 
-    // Pending -> make sense of payload header and body
+    uint64_t stc;
+    std::vector<uint64_t> serialTypeCodes;
+    for (int i = 0; i < 5; i++)
+    {
+      std::tie(stc, off) = Br.read_varint(db, curr_offset);
+      serialTypeCodes.push_back(stc);
+      // std::cout << stc << std::endl;
+      curr_offset += off;
+    }
+    // for (auto x : serialTypeCodes)
+    //   std::cout << x << std::endl;
 
-    free(payload);
+    // skipping first two columns
+    // columns in schema are : (type, name, tbl_name, rootpage, sql)
+
+    for (int i = 0; i < 2; i++)
+    {
+      if (serialTypeCodes[i] <= 4)
+        curr_offset += serialTypeCodes[i];
+      if (serialTypeCodes[i] == 5)
+        curr_offset += 6;
+      if (serialTypeCodes[i] == 6 || serialTypeCodes[i] == 7)
+        curr_offset += 8;
+      if (!(serialTypeCodes[i] % 2) && (serialTypeCodes[i] >= 12))
+        curr_offset += (serialTypeCodes[i] - 12) / 2;
+      if ((serialTypeCodes[i] % 2) && (serialTypeCodes[i] >= 13))
+        curr_offset += (serialTypeCodes[i] - 13) / 2;
+    }
+    // std::cout << serialTypeCodes[2] << std::endl;
+    if ((serialTypeCodes[2] % 2) && (serialTypeCodes[2] >= 13))
+    {
+      // tbl_name == string
+      // std::cout << "string\n";
+      unsigned int stringSize = (serialTypeCodes[2] - 13) / 2;
+      char *buffer;
+      buffer = (char *)malloc(stringSize);
+      Br.read_at(db.getDBFile(), buffer, stringSize, static_cast<unsigned long int>(curr_offset));
+      for (int i = 0; i < (int)stringSize; i++)
+        std::cout << buffer[i];
+      std::cout << " ";
+      free(buffer);
+    }
   }
+  std::cout << std::endl;
 }

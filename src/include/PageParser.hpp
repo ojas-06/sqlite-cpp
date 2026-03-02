@@ -2,6 +2,7 @@
 #include "./Database.hpp"
 #include "./ByteReader.hpp"
 #include <vector>
+#include <tuple>
 
 class PageParser
 {
