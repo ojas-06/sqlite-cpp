@@ -10,7 +10,6 @@ public:
   ByteReader     Br;
 
   explicit       Database(const std::string &db_filepath);
-  void           setDbInfo();
   void           getDbInfo();
   std::ifstream& getDBFile();
 };

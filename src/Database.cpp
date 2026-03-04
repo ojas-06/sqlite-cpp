@@ -7,10 +7,6 @@ Database::Database(const std::string &database_file_path)
   {
     throw std::runtime_error("Failed to open database file: " + database_file_path);
   }
-}
-
-void Database::setDbInfo()
-{
   char buffer[2];
   Br.read_at(database_file, buffer, 2, 16);
   page_size = Br.byteToU16(buffer);
@@ -21,7 +17,6 @@ void Database::setDbInfo()
 
 void Database::getDbInfo()
 {
-  setDbInfo();
   std::cout << "database page size: " << page_size << std::endl;
   std::cout << "number of tables: " << tables << std::endl;
 }

@@ -11,6 +11,18 @@ uint16_t ByteReader::byteToU16(char *buffer)
 {
   return (static_cast<unsigned char>(buffer[1]) | (static_cast<unsigned char>(buffer[0]) << 8));
 }
+uint64_t ByteReader::byteToU64(char *buffer, int size) // size in bytes
+{
+  if (size < 0 || size > 8)
+    throw std::out_of_range("size must be 0..8");
+  uint64_t res = 0;
+  for (int i = 0; i < size; i++)
+  {
+    res <<= 8;
+    res |= static_cast<unsigned char>(buffer[i]);
+  }
+  return res;
+}
 
 std::pair<uint64_t, int> ByteReader::read_varint(Database &db, uint64_t off)
 {
@@ -34,11 +46,15 @@ std::pair<uint64_t, int> ByteReader::read_varint(Database &db, uint64_t off)
   return {v, 9};
 }
 
-int ByteReader::bytesForVarint(uint64_t v){
-  if(v & (0xFF<<56)) return 8;
+int ByteReader::bytesForVarint(uint64_t v)
+{
+  if (v & (0xFFUL << 56))
+    return 8;
   int c = 7;
-  for(int i=48; i>=0; i-=7,c--){
-    if(v & (0xFE<<i)) return c;
+  for (int i = 48; i >= 0; i -= 7, c--)
+  {
+    if (v & (0xFEUL << i))
+      return c;
   }
   return 1;
 }

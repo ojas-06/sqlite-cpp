@@ -14,6 +14,9 @@ class PageParser
   ByteReader             Br;
   std::vector<bool>      page_type; // (true,true) for Interior Table, (false,false) for Leaf Index
 public:
+  uint16_t getCellCount();
+  uint64_t sizeBySerialType(uint64_t stc);
   PageParser(Database& db, unsigned int page_no);
   void printUserTableNames();
+  uint32_t pageNoByTblName(std::string &tblName);
 };

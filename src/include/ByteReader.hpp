@@ -16,6 +16,7 @@ public:
                unsigned int offset,
                unsigned int pre_off = 0);
   uint16_t byteToU16(char *buffer);
+  uint64_t byteToU64(char *buffer, int size);
 
   std::pair<uint64_t, int> read_varint(Database &db, uint64_t offset);
 
