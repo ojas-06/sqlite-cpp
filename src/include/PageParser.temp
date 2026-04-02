@@ -4,6 +4,8 @@
 #include <vector>
 #include <tuple>
 
+class CommandParser;
+
 class PageParser
 {
   uint32_t               page_no;
@@ -16,7 +18,13 @@ class PageParser
 public:
   uint16_t getCellCount();
   uint64_t sizeBySerialType(uint64_t stc);
-  PageParser(Database& db, unsigned int page_no);
+  PageParser(Database& db, uint32_t page_no);
+
+  // schema functions
   void printUserTableNames();
   uint32_t pageNoByTblName(std::string &tblName);
+  uint32_t columnNames_pageNo(std::string &tblName, std::vector<std::string> &columns);
+
+  // generic functions
+
 };

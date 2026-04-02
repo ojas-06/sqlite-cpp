@@ -1,22 +1,5 @@
 #include "./include/Database.hpp"
-#include "./include/PageParser.hpp"
-
-std::vector<std::string> split(std::string &s, char delim)
-{
-    std::vector<std::string> splitted = {""};
-    int top = 0;
-    for (char c : s)
-    {
-        if (c == delim)
-        {
-            splitted.push_back("");
-            top++;
-        }
-        else
-            splitted[top] += c;
-    }
-    return splitted;
-}
+#include "./include/Page_cmdParser.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -47,12 +30,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        std::vector<std::string> splitted = split(command, ' ');
-        std::string tableName = splitted.back();
-        PageParser schemaParser(Db, 1);
-        uint32_t rootpage = schemaParser.pageNoByTblName(tableName);
-        PageParser P(Db, rootpage);
-        std::cout << P.getCellCount() << std::endl;
+        CommandParser C(Db,command);
+        C.taskByQuery();
     }
 
     return 0;
